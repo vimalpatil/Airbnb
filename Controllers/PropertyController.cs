@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Airbnb.WebAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,12 +9,24 @@ namespace Airbnb.WebAPI.Controllers
     [ApiController]
     public class PropertyController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+        PropertyDBAccess propertydbAccess=new PropertyDBAccess();
+
+        public PropertyController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // GET: api/<PropertyController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<PropertyFields> GetpropertyList()
         {
-            return new string[] { "value1", "value2" };
-            //Added comment
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            List<PropertyFields> propertyFields = new List<PropertyFields>();
+
+            return propertyFields = propertydbAccess.GetPropertyList(myconnectionstring);
+
+                //Added comment
         }
 
         // GET api/<PropertyController>/5
