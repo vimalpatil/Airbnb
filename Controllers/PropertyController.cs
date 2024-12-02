@@ -1,4 +1,6 @@
 ﻿using Airbnb.WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,6 +9,7 @@ namespace Airbnb.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
     public class PropertyController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -19,21 +22,24 @@ namespace Airbnb.WebAPI.Controllers
 
         // GET: api/<PropertyController>
         [HttpGet]
+        [EnableCors("MyAllowSpecificOrigins")] // Required for this path.
         public IEnumerable<PropertyFields> GetpropertyList()
         {
             string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
             List<PropertyFields> propertyFields = new List<PropertyFields>();
 
-            return propertyFields = propertydbAccess.GetPropertyList(myconnectionstring);
+            return propertydbAccess.GetPropertyList(myconnectionstring);
 
                 //Added comment
         }
 
         // GET api/<PropertyController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [EnableCors("MyAllowSpecificOrigins")]
+        public PropertyFields Get(int id)
         {
-            return "value";
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            return propertydbAccess.GetRecordbyid(id, myconnectionstring);
         }
 
         // POST api/<PropertyController>

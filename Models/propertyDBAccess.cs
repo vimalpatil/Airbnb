@@ -37,6 +37,46 @@ namespace Airbnb.WebAPI.Models
             }
             return PropertyList;
         }
+
+        public PropertyFields GetRecordbyid(int id,string strcon)
+        {
+            SqlConnection con= new SqlConnection(strcon);
+            //try
+            //{
+                SqlCommand cmd = new SqlCommand("getPropertydetailsByid", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@p_id", id);
+                SqlDataAdapter sd = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+
+                con.Open();
+                sd.Fill(ds);
+                con.Close();
+                PropertyFields myfields = new PropertyFields();
+                myfields.title = ds.Tables[0].Rows[0][1].ToString();
+                myfields.description = ds.Tables[0].Rows[0][2].ToString();
+                myfields.image_name = ds.Tables[0].Rows[0][3].ToString();
+                myfields.price = Convert.ToDouble(ds.Tables[0].Rows[0][4]);
+                myfields.location = ds.Tables[0].Rows[0][5].ToString();
+                myfields.geometry_coordinate = ds.Tables[0].Rows[0][6].ToString();
+                myfields.date = ds.Tables[0].Rows[0][7].ToString();
+            myfields.country = ds.Tables[0].Rows[0][8].ToString();
+            return myfields;
+
+
+            //}
+            //catch (Exception ex) 
+            //{
+            //    if (con.State == System.Data.ConnectionState.Open)
+            //    {
+            //        con.Close();
+            //    }
+
+            //}
+
+        }
+
+       
     }
 
 }
