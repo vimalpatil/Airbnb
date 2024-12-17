@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.VisualBasic;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Airbnb.WebAPI.Models
@@ -31,7 +32,7 @@ namespace Airbnb.WebAPI.Models
                         price = Convert.ToDouble(dr["price"]),
                         location = Convert.ToString(dr["location"]),
                         geometry_coordinate = Convert.ToString(dr["geometry_coordinate"]),
-                        date = Convert.ToString(dr["date"])
+                        date = Convert.ToDateTime(dr["date"])
                     }
                     );
             }
@@ -59,7 +60,7 @@ namespace Airbnb.WebAPI.Models
                 myfields.price = Convert.ToDouble(ds.Tables[0].Rows[0][4]);
                 myfields.location = ds.Tables[0].Rows[0][5].ToString();
                 myfields.geometry_coordinate = ds.Tables[0].Rows[0][6].ToString();
-                myfields.date = ds.Tables[0].Rows[0][7].ToString();
+                myfields.date = Convert.ToDateTime(ds.Tables[0].Rows[0][7]);
             myfields.country = ds.Tables[0].Rows[0][8].ToString();
             return myfields;
 
@@ -74,6 +75,44 @@ namespace Airbnb.WebAPI.Models
 
             //}
 
+        }
+
+        public string AddProperty(PropertyFields mypropertyfields,string strcon)
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            try
+            {
+                DataTable dtproperty = new DataTable();
+                dtproperty.Columns.Add("title", typeof(string));
+                dtproperty.Columns.Add("description", typeof(string));
+                dtproperty.Columns.Add("image_name", typeof(string));
+                dtproperty.Columns.Add("price", typeof(double));
+                dtproperty.Columns.Add("location", typeof(string));
+                dtproperty.Columns.Add("geometry_coordinte", typeof(string));
+                dtproperty.Columns.Add("date", typeof(DateTime));
+                dtproperty.Columns.Add("country", typeof(string));
+                dtproperty.Columns.Add("user_id", typeof(int));
+                DateTime datetime = DateTime.Now;
+
+                dtproperty.Rows.Add(mypropertyfields.title,mypropertyfields.description,mypropertyfields.image_name,mypropertyfields.price,mypropertyfields.location,mypropertyfields.geometry_coordinate, mypropertyfields.date, mypropertyfields.country,mypropertyfields.user_id);
+
+
+                SqlCommand cmd = new SqlCommand("AddProperty", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Property_Details", dtproperty);
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return ("Data saved Successfully");
+            }
+            catch (Exception ex)
+            {
+                if (con.State == System.Data.ConnectionState.Open)
+                {
+                    con.Close();
+                }
+               return (ex.Message);
+            }
         }
 
        

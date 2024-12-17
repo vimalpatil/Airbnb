@@ -9,10 +9,10 @@
         public double price { get; set; }
         public string location {  get; set; }
         public string geometry_coordinate { get; set;}
-        public string date { get; set; }
+        public DateTime date { get; set; }
         
         public string country { get; set;}
-
+        public int user_id { get; set; }
     }
 
    

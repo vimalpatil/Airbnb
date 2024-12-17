@@ -44,8 +44,11 @@ namespace Airbnb.WebAPI.Controllers
 
         // POST api/<PropertyController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [EnableCors("MyAllowSpecificOrigins")] // Required for this path.
+        public void Post([FromBody] PropertyFields postpropertyData)
         {
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            propertydbAccess.AddProperty(postpropertyData, myconnectionstring);
         }
 
         // PUT api/<PropertyController>/5
