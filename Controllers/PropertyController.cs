@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Airbnb.WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -6,27 +9,46 @@ namespace Airbnb.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
     public class PropertyController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+        PropertyDBAccess propertydbAccess=new PropertyDBAccess();
+
+        public PropertyController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // GET: api/<PropertyController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [EnableCors("MyAllowSpecificOrigins")] // Required for this path.
+        public IEnumerable<PropertyFields> GetpropertyList()
         {
-            return new string[] { "value1", "value2" };
-            //Added comment
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            List<PropertyFields> propertyFields = new List<PropertyFields>();
+
+            return propertydbAccess.GetPropertyList(myconnectionstring);
+
+                //Added comment
         }
 
         // GET api/<PropertyController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [EnableCors("MyAllowSpecificOrigins")]
+        public PropertyFields Get(int id)
         {
-            return "value";
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            return propertydbAccess.GetRecordbyid(id, myconnectionstring);
         }
 
         // POST api/<PropertyController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [EnableCors("MyAllowSpecificOrigins")] // Required for this path.
+        public void Post([FromBody] PropertyFields postpropertyData)
         {
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            propertydbAccess.AddProperty(postpropertyData, myconnectionstring);
         }
 
         // PUT api/<PropertyController>/5
