@@ -1,6 +1,6 @@
 ﻿namespace Airbnb.WebAPI.Models
 {
-    public class PropertyFields
+    public class PropertyDetails
     {
         public int p_id { get; set; }
         public string title {  get; set; }
@@ -12,7 +12,9 @@
         public DateTime date { get; set; }
         
         public string country { get; set;}
-        public int user_id { get; set; }
+        public int ?user_id { get; set; }
+        public string ?username { get; set; }
+        public string ?user_type { get; set; }
     }
 
    
