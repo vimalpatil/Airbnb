@@ -5,6 +5,7 @@
         public int review_id { get; set; }
         public int rating { get; set; }
         public string comment { get; set; }
+        public string ?username { get; set; }
         public int user_id { get; set; }
         public int p_id { get; set; }
         public DateTime review_date {  get; set; }
