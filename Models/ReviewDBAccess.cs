@@ -36,5 +36,26 @@ namespace Airbnb.WebAPI.Models
             }
         }
 
+        public ReviewFields GetReviewByid(int id,string strcon)
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            SqlCommand cmd = new SqlCommand("getReviewById", con);
+            cmd.CommandType= CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@p_id", id);
+            SqlDataAdapter sd = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            con.Open();
+            sd.Fill(ds);
+            con.Close() ;
+            ReviewFields review_list= new ReviewFields();
+            review_list.comment = ds.Tables[0].Rows[0][2].ToString();
+            review_list.rating = Convert.ToInt32(ds.Tables[0].Rows[0][3].ToString());
+            review_list.review_id = Convert.ToInt32(ds.Tables[0].Rows[0][4].ToString());
+            review_list.username= ds.Tables[0].Rows[0][4].ToString();
+            return review_list;
+
+
+        }
+
     }
 }

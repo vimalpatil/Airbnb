@@ -29,9 +29,12 @@ namespace Airbnb.WebAPI.Controllers
 
         // GET api/<ReviewController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [EnableCors("MyAllowSpecificOrigins")]
+        public ReviewFields Get(int id)
         {
-            return "value";
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            return reviewDBAccess.GetReviewByid(id, myconnectionstring);
+
         }
 
         // POST api/<ReviewController>
