@@ -36,25 +36,57 @@ namespace Airbnb.WebAPI.Models
             }
         }
 
-        public ReviewFields GetReviewByid(int id,string strcon)
+        public List<ReviewFields> GetReviewByid(int id,string strcon)
         {
+            List<ReviewFields> ReviewList = new List<ReviewFields>();
             SqlConnection con = new SqlConnection(strcon);
             SqlCommand cmd = new SqlCommand("getReviewById", con);
             cmd.CommandType= CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@p_id", id);
             SqlDataAdapter sd = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
             con.Open();
-            sd.Fill(ds);
-            con.Close() ;
-            ReviewFields review_list= new ReviewFields();
-            review_list.comment = ds.Tables[0].Rows[0][2].ToString();
-            review_list.rating = Convert.ToInt32(ds.Tables[0].Rows[0][3].ToString());
-            review_list.review_id = Convert.ToInt32(ds.Tables[0].Rows[0][4].ToString());
-            review_list.username= ds.Tables[0].Rows[0][4].ToString();
-            return review_list;
+            sd.Fill(dt);
+            con.Close();
+            foreach (DataRow dr in dt.Rows)
+            {
+               ReviewList.Add(
+                    new ReviewFields
+                    {
+                        review_id = Convert.ToInt32(dr["review_id"]),
+                        rating = Convert.ToInt32(dr["rating"]),
+                        comment = Convert.ToString(dr["comment"]),
+                        username = Convert.ToString(dr["username"]),
+                        //review_date = Convert.ToDateTime(dr["review_date"])
+                    }
+                    );
+            }
+            return ReviewList;
 
 
+        }
+
+        public string DeleteReview(int id,string strcon)
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            try
+            {
+                SqlCommand cmd = new SqlCommand("delete_review", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue ("review_id", id);
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return "Review Deleted successfully";
+            }
+            catch(Exception ex)
+            {
+                if (con.State == System.Data.ConnectionState.Open)
+                {
+                    con.Close();
+                }
+                return (ex.Message);
+            }
         }
 
     }

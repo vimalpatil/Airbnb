@@ -26,8 +26,7 @@ namespace Airbnb.WebAPI.Controllers
         public IEnumerable<PropertyDetails> GetpropertyList()
         {
             string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
-            List<PropertyDetails> propertyFields = new List<PropertyDetails>();
-
+            //List<PropertyDetails> propertyFields = new List<PropertyDetails>();
             return propertydbAccess.GetPropertyList(myconnectionstring);
 
                 //Added comment
