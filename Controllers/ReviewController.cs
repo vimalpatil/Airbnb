@@ -30,7 +30,7 @@ namespace Airbnb.WebAPI.Controllers
         // GET api/<ReviewController>/5
         [HttpGet("{id}")]
         [EnableCors("MyAllowSpecificOrigins")]
-        public ReviewFields Get(int id)
+        public IEnumerable<ReviewFields> Get(int id)
         {
             string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
             return reviewDBAccess.GetReviewByid(id, myconnectionstring);
@@ -54,8 +54,11 @@ namespace Airbnb.WebAPI.Controllers
 
         // DELETE api/<ReviewController>/5
         [HttpDelete("{id}")]
+        [EnableCors("MyAllowSpecificOrigins")]
         public void Delete(int id)
         {
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            reviewDBAccess.DeleteReview(id, myconnectionstring);
         }
     }
 }
