@@ -41,6 +41,16 @@ namespace Airbnb.WebAPI.Controllers
             return propertydbAccess.GetRecordbyid(id, myconnectionstring);
         }
 
+        [HttpGet]
+        [Route("location/{location}")]
+        [EnableCors("MyAllowSpecificOrigins")]
+        public IEnumerable<PropertyDetails> GetByLocation(string location)
+        {
+            string myconnectionstring = _configuration["ConnectionStrings:myconnectionstring"];
+            return propertydbAccess.GetPropertyList_on_Location(location, myconnectionstring);
+        }
+
+
         // POST api/<PropertyController>
         [HttpPost]
         [EnableCors("MyAllowSpecificOrigins")] // Required for this path.

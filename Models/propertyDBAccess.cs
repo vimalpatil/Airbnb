@@ -80,6 +80,41 @@ namespace Airbnb.WebAPI.Models
 
         }
 
+        public List<PropertyDetails> GetPropertyList_on_Location(string location, string strcon)
+        {
+            List<PropertyDetails> PropertyList = new List<PropertyDetails>();
+            SqlConnection con = new SqlConnection(strcon);
+
+            SqlCommand cmd = new SqlCommand("getPropertylistByLocation", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@location", location);
+            SqlDataAdapter sd = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            con.Open();
+            sd.Fill(dt);
+            con.Close();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                PropertyList.Add(
+                    new PropertyDetails
+                    {
+                        p_id = Convert.ToInt32(dr["p_id"]),
+                        title = Convert.ToString(dr["title"]),
+                        description = Convert.ToString(dr["description"]),
+                        image_name = Convert.ToString(dr["image_name"]),
+                        price = Convert.ToDouble(dr["price"]),
+                        location = Convert.ToString(dr["location"]),
+                        geometry_coordinate = Convert.ToString(dr["geometry_coordinate"]),
+                        date = Convert.ToDateTime(dr["date"])
+                    }
+                    );
+            }
+            return PropertyList;
+
+
+        }
+
         public string AddProperty(PropertyDetails mypropertyfields,string strcon)
         {
             SqlConnection con = new SqlConnection(strcon);
